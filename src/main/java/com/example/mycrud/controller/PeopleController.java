@@ -3,10 +3,10 @@ package com.example.mycrud.controller;
 import com.example.mycrud.model.People;
 import com.example.mycrud.service.PeopleService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -14,25 +14,25 @@ import java.util.List;
 public class PeopleController {
 
     private final PeopleService peopleService;
-//
-//    @Autowired
-//    public PeopleController(PeopleService peopleService) {
-//        this.peopleService = peopleService;
-//    }
 
     @GetMapping("/all")
     public List<People> getAll(){
         return peopleService.findAll();
     }
 
-    @GetMapping("/id/{id}")
-    public List<People> getID(@PathVariable("id") Long id){
-        return (List<People>) peopleService.findById(id);
+    @GetMapping("/{id}")
+    public Optional<People> getID(@PathVariable(required = false) Long id){
+        return peopleService.findById(id);
     }
 
-    @DeleteMapping("deleteId/{id}")
-    public String deleteById(@PathVariable("id") Long id){
-        return peopleService.deleteById(id);
+    @DeleteMapping("/{id}")
+    public boolean deleteById(@PathVariable("id") Long id){
+        peopleService.deleteById(id);
+        return true;
     }
 
+    @PostMapping
+    public People savePeople(@RequestBody People people) {
+        return peopleService.addPeople(people);
+    }
 }
